@@ -15,78 +15,128 @@ public:
     }
 };
 
-Node* Insert(Node* root, int data)
+Node* Insertion(Node* root, int data)
 {
     if(root == NULL){
         root = new Node(data);
     }
     else if(data <= root->data){
-        root->left = Insert(root->left,data);
+        root->left = Insertion(root->left, data);
     }
-    else{
-        root->right = Insert(root->right,data);
+    else {
+        root->right = Insertion(root->right, data);
     }
     return root;
 }
 
-void LevelOrderTraversal(Node* root)
+void Inorder(Node* root)
+{
+    if(root == NULL) return;
+    Inorder(root->left);
+    cout<<root->data<<" ";
+    Inorder(root->right);
+}
+
+void Preorder(Node* root)
+{
+    if(root == NULL) return;
+    cout<<root->data<<" ";
+    Preorder(root->left);
+    Preorder(root->right);
+}
+
+void Postorder(Node* root)
+{
+    if(root == NULL) return;
+    Postorder(root->left);
+    Postorder(root->right);
+    cout<<root->data<<" ";
+}
+
+void Levelorder(Node* root)
 {
     if(root == NULL){
         cout<<"Empty"<<endl;
-        return;
     }
     queue<Node*> Q;
     Q.push(root);
-    while(!Q.empty()){
-        Node* current = Q.front();
+    while(!Q.empty())
+    {
+        Node* curr = Q.front();
         Q.pop();
-        cout<<current->data<<" ";
-        if(current->left != NULL) Q.push(current->left);
-        if(current->right != NULL) Q.push(current->right);
+        cout<<curr->data<<" ";
+        if(curr->left != NULL) Q.push(curr->left);
+        if(curr->right != NULL) Q.push(curr->right);
     }
 }
 
 int Height(Node* root)
 {
-    if(root == NULL){
-        return -1;
-    }
+    if(root == NULL) return -1;
     int leftHeight = Height(root->left);
     int rightHeight = Height(root->right);
-    return max(leftHeight,rightHeight)+1;
+    return max(leftHeight, rightHeight) + 1;
 }
 
-void Min(Node* root)
+Node* FindMin(Node* root)
 {
-    if(root == NULL) return;
-    else if(root->left == NULL) cout<<"Min value = "<<root->data<<endl;
-    else Min(root->left);
+    while(root->left != NULL) root = root->left;
+    return root;
 }
 
-void MinIte(Node* root)
+Node* Delete(Node* root, int data)
 {
-    if(root == NULL){
-        cout<<"Empty"<<endl;
-        return;
+    if(root == NULL) return root;
+    else if(data < root->data){
+        root->left = Delete(root->left,data);
     }
-    while(root->left != NULL){
-        root = root->left;
+    else if(data > root->data){
+        root->right = Delete(root->right,data);
     }
-    cout<<"Min Iterative = "<<root->data<<endl;
-    return;
+    else {
+        if(root->left == NULL && root->right == NULL){
+            delete root;
+            root = NULL;
+        }
+        else if(root->left == NULL){
+            Node* temp = root;
+            root = root->right;
+            delete temp;
+        }
+        else if(root->right == NULL){
+            Node* temp = root;
+            root = root->left;
+            delete temp;
+        }
+        else {
+            Node* temp = FindMin(root->right);
+            root->data = temp->data;
+            root->right = Delete(root->right, temp->data);
+        }
+    }
+    return root;
 }
+
 
 int main()
 {
     Node* root = NULL;
-    root = Insert(root,20);
-    root = Insert(root,10);
-    root = Insert(root,30);
-    root = Insert(root,8);
-    root = Insert(root,11);
-    LevelOrderTraversal(root);
-    cout<<"\nHeight of tree = "<<Height(root)<<endl;
-    Min(root);
-    MinIte(root);
+    root = Insertion(root, 50);
+    root = Insertion(root, 20);
+    root = Insertion(root, 70);
+    root = Insertion(root, 15);
+    root = Insertion(root, 30);
+    cout<<"Inorder traversal = ";
+    Inorder(root);
+    cout<<"\nPreorder traversal = ";
+    Preorder(root);
+    cout<<"\nPostorder traversal = ";
+    Postorder(root);
+    cout<<"\nLevel order traversal = ";
+    Levelorder(root);
+    cout<<"\nHeight of tree : "<<Height(root)<<endl;
+    root = Delete(root,20);
+    cout<<"\nLevel order traversal = ";
+    Levelorder(root);
     return 0;
 }
