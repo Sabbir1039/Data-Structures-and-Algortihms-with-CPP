@@ -1,49 +1,52 @@
 #include<iostream>
 using namespace std;
 
-void printArray(int A[], int size)
+void printArray(int arr[], int size)
 {
-    for(int i=0; i<size; i++) {
-        cout<< A[i] <<" ";
-    }
-    return;
+	for (int i=0; i<size; i++)
+	{
+		cout << arr[i] << " " ;
+	}
 }
 
-void addItemEnd(int A[], int &size, int item)
+void addArrayElement(int arr[], int &size, int item)
 {
-    A[size] = item;
-    size++;
-    return;
+	arr[size] = item;
+	size++;
 }
 
-void addItemNth(int arr[], int &size, int item, int pos)
+void addArrayElementAtNth(int arr[], int &size, int item, int pos)
 {
-    if(size == 0) {
-        arr[size] = item;
-        size++;
-        return;
-    }
-    if( pos<=0 || pos>size) {
-        cout<<"Invalid position!"<<endl;
-        return;
-    }
-
-    for(int i=size-1; i>=pos-1; i--) {
-        arr[i+1] = arr[i];
-    }
-
-    arr[pos-1] = item;
-    size++;
-    return;
+	if (pos > size || pos < 0)
+	{
+		cout<<"Invalid position"<<endl;
+		return;
+	}
+	if (pos == size)
+	{
+		arr[size] = item;
+		size++;
+		return;
+	}
+	size++;
+	for (int i=size; i>pos; i--)
+	{
+		arr[i] = arr[i-1];
+	}
+	arr[pos] = item;
+	return;
 }
 
-int main() 
+int main()
 {
-    int arr[] = {1,2,3,4,5};
-    int size = sizeof(arr)/sizeof(arr[0]);
-    int item = 6;
-    addItemNth(arr, size, item, 1);
-    printArray(arr, size);
-   
-    return 0;
+	int *arr = new int[10] {};
+	int size = 0;
+
+	addArrayElement(arr, size, 6);
+	addArrayElementAtNth(arr, size, 1, 0);
+	addArrayElementAtNth(arr, size, 10, 2);
+	printArray(arr, size);
+
+	delete[] arr;
+	return 0;
 }
