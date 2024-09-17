@@ -33,3 +33,6 @@
 *.py
 test.cpp
 test.exe
+
+*.vs
+*.vscode
